@@ -7,9 +7,9 @@
   <style>
     :root {
       --bg: #0b0f19;
-      --accent: #f59e0b;
-      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.09);
       --text: #f8fafc;
+      --accent: #f59e0b;
     }
 
     * {
@@ -39,20 +39,20 @@
 
     .container {
       width: 90%;
-      max-width: 460px;
+      max-width: 440px;
       position: relative;
     }
 
     .slide {
       display: none;
       opacity: 0;
-      transform: translateY(25px) scale(0.97);
+      transform: translateY(20px) scale(0.96);
       transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       background: var(--card-bg);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 24px;
-      padding: 30px 24px;
+      padding: 30px 22px;
       text-align: center;
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
     }
@@ -64,20 +64,20 @@
     }
 
     h1 {
-      font-size: 2.1rem;
+      font-size: 2rem;
       margin-bottom: 8px;
       color: #fbbf24;
     }
 
     h2 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       margin-bottom: 8px;
       color: #f8fafc;
     }
 
     p {
       color: #94a3b8;
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       line-height: 1.5;
       margin-bottom: 20px;
     }
@@ -93,52 +93,56 @@
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
       transition: transform 0.2s ease;
+      margin-top: 10px;
     }
 
     .btn:active {
       transform: scale(0.95);
     }
 
-    /* Interactive Balloons */
-    .balloon-grid {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin: 20px 0;
-    }
-
-    .balloon {
-      font-size: 2.6rem;
+    /* Floating Tap Icons */
+    .tap-target {
+      font-size: 4rem;
       cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.3s;
+      display: inline-block;
+      margin: 25px auto;
+      transition: transform 0.25s ease;
+      animation: float 2s infinite ease-in-out;
     }
 
-    .balloon:hover {
-      transform: scale(1.15);
+    .tap-target:hover {
+      transform: scale(1.2);
     }
 
-    .balloon.popped {
-      transform: scale(0);
-      opacity: 0;
-      pointer-events: none;
+    .tap-heart {
+      animation: pulse 1.2s infinite ease-in-out;
     }
 
-    .reason-box {
-      min-height: 48px;
-      font-style: italic;
-      color: #fde047;
-      font-size: 0.95rem;
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
     }
 
-    /* Polaroid Photo Frame */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* Polaroid Image Cards */
     .polaroid {
       background: #ffffff;
       color: #1e293b;
       padding: 12px 12px 18px 12px;
       border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       margin: 15px auto;
       max-width: 290px;
+      animation: popIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .polaroid img {
@@ -155,118 +159,101 @@
       font-weight: 600;
       color: #334155;
     }
-
-    .nav-btns {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 15px;
-    }
-
-    /* Letter note */
-    .letter {
-      background: #fdf6e2;
-      color: #2c271e;
-      padding: 22px;
-      border-radius: 12px;
-      text-align: left;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-      margin-bottom: 20px;
-    }
   </style>
 </head>
 <body>
 
-  <!-- Background Music -->
+  <!-- Audio track -->
   <audio id="bg-music" src="music.mp3" loop></audio>
 
-  <!-- Canvas for Confetti -->
+  <!-- Confetti Canvas -->
   <canvas id="confetti-canvas"></canvas>
 
   <div class="container">
-    <!-- Slide 1: Welcome & Play Audio -->
-    <div class="slide active" id="slide-1">
+
+    <!-- Screen 0: Tap to Start Music -->
+    <div class="slide active" id="slide-0">
       <div style="font-size: 3rem; margin-bottom: 10px;">✨</div>
-      <p>A little something, just for you...</p>
+      <p>A little birthday surprise for you...</p>
       <h1>Happy Birthday, Govind!</h1>
-      <p>Turn up the volume & tap below to begin 🎶</p>
-      <button class="btn" onclick="startExperience()">Open Surprise 🎁</button>
+      <p>Turn on audio & tap below 🎶</p>
+      <button class="btn" onclick="startExperience()">Let's Celebrate! 🎉</button>
     </div>
 
-    <!-- Slide 2: Pop the balloons -->
+    <!-- Screen 1: Pop the Balloon -->
+    <div class="slide" id="slide-1">
+      <h2>Pop the Balloon 🎈</h2>
+      <p>Tap the balloon to see what is inside!</p>
+      <div class="tap-target" onclick="popAndNext()">🎈</div>
+    </div>
+
+    <!-- Screen 2: Photo 1 Appears -->
     <div class="slide" id="slide-2">
-      <h2>Pop the Balloons 🎈</h2>
-      <p>Each one holds a special reason to celebrate you!</p>
-
-      <div class="balloon-grid">
-        <div class="balloon" onclick="popBalloon(this, 'Always curing worries with that calm smile! 🩺')">🎈</div>
-        <div class="balloon" onclick="popBalloon(this, 'Unbeatable partner-in-crime through every adventure! 🤜🤛')">🎈</div>
-        <div class="balloon" onclick="popBalloon(this, 'May this year bring huge milestones & success! 🌟')">🎈</div>
+      <h2>Dr. Govind 🩺</h2>
+      <div class="polaroid">
+        <img src="images/photo1.jpg" alt="Govind Doctor" />
+        <div class="caption">Dedicated, hardworking & inspiring! 🩺✨</div>
       </div>
-
-      <div class="reason-box" id="reason-text">Tap a balloon above...</div>
-      <button class="btn" id="balloon-next" style="display: none;" onclick="nextSlide()">A Walk Down Memory Lane 📸</button>
+      <button class="btn" onclick="nextSlide()">Continue ➡️</button>
     </div>
 
-    <!-- Slide 3: Photo 1 (Doctor) -->
+    <!-- Screen 3: Heart Appears -->
     <div class="slide" id="slide-3">
-      <h2>Dr. Govind in Action 🩺</h2>
-      <div class="polaroid">
-        <img src="images/photo1.jpg" alt="Govind in doctor coat" />
-        <div class="caption">Dedicated & inspiring every single day ✨</div>
-      </div>
-      <button class="btn" onclick="nextSlide()">Next Memory ➡️</button>
+      <h2>Tap the Heart ❤️</h2>
+      <p>Tap the beating heart to unlock another memory!</p>
+      <div class="tap-target tap-heart" onclick="popAndNext()">❤️</div>
     </div>
 
-    <!-- Slide 4: Photo 2 (Brothers Selfie) -->
+    <!-- Screen 4: Photo 2 Appears -->
     <div class="slide" id="slide-4">
-      <h2>Partners in Crime 🤝</h2>
+      <h2>Partners in Crime 🤜🤛</h2>
       <div class="polaroid">
-        <img src="images/photo2.jpg" alt="Brothers selfie" />
-        <div class="caption">Countless talks and brotherhood 👊</div>
+        <img src="images/photo2.jpg" alt="Brothers Selfie" />
+        <div class="caption">Unbreakable bond & endless laughs 🌟</div>
       </div>
-      <button class="btn" onclick="nextSlide()">Next Memory ➡️</button>
+      <button class="btn" onclick="nextSlide()">Continue ➡️</button>
     </div>
 
-    <!-- Slide 5: Photo 3 (Sunset) -->
+    <!-- Screen 5: Star / Magic Tap -->
     <div class="slide" id="slide-5">
+      <h2>Make a Wish ✨</h2>
+      <p>Tap the golden star!</p>
+      <div class="tap-target" onclick="popAndNext()">🌟</div>
+    </div>
+
+    <!-- Screen 6: Photo 3 Appears -->
+    <div class="slide" id="slide-6">
       <h2>Chasing Sunsets 🌅</h2>
       <div class="polaroid">
-        <img src="images/photo3.jpg" alt="Brothers at sunset" />
-        <div class="caption">To all the shared moments & memories 🌇</div>
+        <img src="images/photo3.jpg" alt="Brothers Sunset" />
+        <div class="caption">To all our journeys and golden memories 🌇</div>
       </div>
-      <button class="btn" onclick="nextSlide()">Read Note 💌</button>
+      <button class="btn" onclick="nextSlide()">See Birthday Wish 🎂</button>
     </div>
 
-    <!-- Slide 6: Special Note -->
-    <div class="slide" id="slide-6">
-      <h2>A Note for You 💌</h2>
-      <div class="letter">
-        Dear Govind,<br><br>
-        Wishing you the happiest of birthdays! May this year open doors to immense happiness, great health, and huge success in everything you pursue.<br><br>
-        Keep shining bright and healing the world!<br><br>
-        — Cheers to you! 🥂
-      </div>
-      <button class="btn" onclick="nextSlide()">Final Wish 🎂</button>
-    </div>
-
-    <!-- Slide 7: Final Cheers -->
+    <!-- Screen 7: Final Birthday Greeting Card -->
     <div class="slide" id="slide-7">
       <div style="font-size: 3.5rem; margin-bottom: 10px;">🎂</div>
-      <h1>Happy Birthday, Govind!</h1>
-      <p>Wishing you endless smiles, milestones, and celebration today and always!</p>
-      <button class="btn" onclick="triggerConfettiBurst()">More Confetti 🎉</button>
+      <h1>HAPPY BIRTHDAY<br>GOVIND!</h1>
+      <p style="color: #cbd5e1; font-size: 1.05rem; margin: 15px 0 25px;">
+        May this year bring you limitless happiness, good health, and success in everything you do. Keep shining bright! 🥂✨
+      </p>
+      <button class="btn" onclick="triggerConfettiBurst()">Celebrate More 🎉</button>
     </div>
+
   </div>
 
   <script>
-    let currentSlide = 1;
-    let poppedCount = 0;
+    let currentSlide = 0;
     const music = document.getElementById('bg-music');
 
     function startExperience() {
-      music.play().catch(e => console.log('Audio autoplay prevented:', e));
+      music.play().catch(e => console.log('Audio playback waiting:', e));
+      nextSlide();
+    }
+
+    function popAndNext() {
+      triggerConfettiBurst();
       nextSlide();
     }
 
@@ -282,18 +269,7 @@
       }
     }
 
-    function popBalloon(el, message) {
-      el.classList.add('popped');
-      document.getElementById('reason-text').textContent = `"${message}"`;
-      triggerConfettiBurst();
-
-      poppedCount++;
-      if (poppedCount >= 3) {
-        document.getElementById('balloon-next').style.display = 'inline-block';
-      }
-    }
-
-    /* Confetti system */
+    /* Confetti Particle System */
     const canvas = document.getElementById('confetti-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -309,10 +285,10 @@
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height - canvas.height;
-        this.size = Math.random() * 8 + 4;
+        this.size = Math.random() * 7 + 4;
         this.speedY = Math.random() * 3 + 2;
         this.speedX = (Math.random() - 0.5) * 2;
-        this.color = ['#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#a855f7'][Math.floor(Math.random() * 5)];
+        this.color = ['#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#a855f7', '#ec4899'][Math.floor(Math.random() * 6)];
       }
       update() {
         this.y += this.speedY;
@@ -328,369 +304,12 @@
       }
     }
 
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 35; i++) {
       particles.push(new Particle());
     }
 
     function triggerConfettiBurst() {
-      for (let i = 0; i < 30; i++) {
-        const p = new Particle();
-        p.x = window.innerWidth / 2;
-        p.y = window.innerHeight / 2;
-        p.speedY = (Math.random() - 0.5) * 14;
-        p.speedX = (Math.random() - 0.5) * 14;
-        particles.push(p);
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
-      requestAnimationFrame(animate);
-    }
-    animate();
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Birthday Govind!</title>
-  <style>
-    :root {
-      --bg: #0b0f19;
-      --accent: #f59e0b;
-      --card-bg: rgba(255, 255, 255, 0.08);
-      --text: #f8fafc;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-      user-select: none;
-    }
-
-    body {
-      background: radial-gradient(circle at center, #1e293b, var(--bg));
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    #confetti-canvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 99;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 460px;
-      position: relative;
-    }
-
-    .slide {
-      display: none;
-      opacity: 0;
-      transform: translateY(25px) scale(0.97);
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      padding: 30px 24px;
-      text-align: center;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
-    }
-
-    .slide.active {
-      display: block;
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    h1 {
-      font-size: 2.1rem;
-      margin-bottom: 8px;
-      color: #fbbf24;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 8px;
-      color: #f8fafc;
-    }
-
-    p {
-      color: #94a3b8;
-      font-size: 0.98rem;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .btn {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #ffffff;
-      border: none;
-      padding: 12px 28px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border-radius: 999px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
-      transition: transform 0.2s ease;
-    }
-
-    .btn:active {
-      transform: scale(0.95);
-    }
-
-    /* Interactive Balloons */
-    .balloon-grid {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin: 20px 0;
-    }
-
-    .balloon {
-      font-size: 2.6rem;
-      cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.3s;
-    }
-
-    .balloon:hover {
-      transform: scale(1.15);
-    }
-
-    .balloon.popped {
-      transform: scale(0);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .reason-box {
-      min-height: 48px;
-      font-style: italic;
-      color: #fde047;
-      font-size: 0.95rem;
-    }
-
-    /* Polaroid Photo Frame */
-    .polaroid {
-      background: #ffffff;
-      color: #1e293b;
-      padding: 12px 12px 18px 12px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      margin: 15px auto;
-      max-width: 290px;
-    }
-
-    .polaroid img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 6px;
-      display: block;
-    }
-
-    .polaroid .caption {
-      margin-top: 10px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: #334155;
-    }
-
-    .nav-btns {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 15px;
-    }
-
-    /* Letter note */
-    .letter {
-      background: #fdf6e2;
-      color: #2c271e;
-      padding: 22px;
-      border-radius: 12px;
-      text-align: left;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-      margin-bottom: 20px;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Background Music -->
-  <audio id="bg-music" src="music.mp3" loop></audio>
-
-  <!-- Canvas for Confetti -->
-  <canvas id="confetti-canvas"></canvas>
-
-  <div class="container">
-    <!-- Slide 1: Welcome & Play Audio -->
-    <div class="slide active" id="slide-1">
-      <div style="font-size: 3rem; margin-bottom: 10px;">✨</div>
-      <p>A little something, just for you...</p>
-      <h1>Happy Birthday, Govind!</h1>
-      <p>Turn up the volume & tap below to begin 🎶</p>
-      <button class="btn" onclick="startExperience()">Open Surprise 🎁</button>
-    </div>
-
-    <!-- Slide 2: Pop the balloons -->
-    <div class="slide" id="slide-2">
-      <h2>Pop the Balloons 🎈</h2>
-      <p>Each one holds a special reason to celebrate you!</p>
-
-      <div class="balloon-grid">
-        <div class="balloon" onclick="popBalloon(this, 'Always curing worries with that calm smile! 🩺')">🎈</div>
-        <div class="balloon" onclick="popBalloon(this, 'Unbeatable partner-in-crime through every adventure! 🤜🤛')">🎈</div>
-        <div class="balloon" onclick="popBalloon(this, 'May this year bring huge milestones & success! 🌟')">🎈</div>
-      </div>
-
-      <div class="reason-box" id="reason-text">Tap a balloon above...</div>
-      <button class="btn" id="balloon-next" style="display: none;" onclick="nextSlide()">A Walk Down Memory Lane 📸</button>
-    </div>
-
-    <!-- Slide 3: Photo 1 (Doctor) -->
-    <div class="slide" id="slide-3">
-      <h2>Dr. Govind in Action 🩺</h2>
-      <div class="polaroid">
-        <img src="images/photo1.jpg" alt="Govind in doctor coat" />
-        <div class="caption">Dedicated & inspiring every single day ✨</div>
-      </div>
-      <button class="btn" onclick="nextSlide()">Next Memory ➡️</button>
-    </div>
-
-    <!-- Slide 4: Photo 2 (Brothers Selfie) -->
-    <div class="slide" id="slide-4">
-      <h2>Partners in Crime 🤝</h2>
-      <div class="polaroid">
-        <img src="images/photo2.jpg" alt="Brothers selfie" />
-        <div class="caption">Countless talks and brotherhood 👊</div>
-      </div>
-      <button class="btn" onclick="nextSlide()">Next Memory ➡️</button>
-    </div>
-
-    <!-- Slide 5: Photo 3 (Sunset) -->
-    <div class="slide" id="slide-5">
-      <h2>Chasing Sunsets 🌅</h2>
-      <div class="polaroid">
-        <img src="images/photo3.jpg" alt="Brothers at sunset" />
-        <div class="caption">To all the shared moments & memories 🌇</div>
-      </div>
-      <button class="btn" onclick="nextSlide()">Read Note 💌</button>
-    </div>
-
-    <!-- Slide 6: Special Note -->
-    <div class="slide" id="slide-6">
-      <h2>A Note for You 💌</h2>
-      <div class="letter">
-        Dear Govind,<br><br>
-        Wishing you the happiest of birthdays! May this year open doors to immense happiness, great health, and huge success in everything you pursue.<br><br>
-        Keep shining bright and healing the world!<br><br>
-        — Cheers to you! 🥂
-      </div>
-      <button class="btn" onclick="nextSlide()">Final Wish 🎂</button>
-    </div>
-
-    <!-- Slide 7: Final Cheers -->
-    <div class="slide" id="slide-7">
-      <div style="font-size: 3.5rem; margin-bottom: 10px;">🎂</div>
-      <h1>Happy Birthday, Govind!</h1>
-      <p>Wishing you endless smiles, milestones, and celebration today and always!</p>
-      <button class="btn" onclick="triggerConfettiBurst()">More Confetti 🎉</button>
-    </div>
-  </div>
-
-  <script>
-    let currentSlide = 1;
-    let poppedCount = 0;
-    const music = document.getElementById('bg-music');
-
-    function startExperience() {
-      music.play().catch(e => console.log('Audio autoplay prevented:', e));
-      nextSlide();
-    }
-
-    function nextSlide() {
-      const current = document.getElementById(`slide-${currentSlide}`);
-      if (current) current.classList.remove('active');
-
-      currentSlide++;
-      const next = document.getElementById(`slide-${currentSlide}`);
-      if (next) {
-        next.classList.add('active');
-        triggerConfettiBurst();
-      }
-    }
-
-    function popBalloon(el, message) {
-      el.classList.add('popped');
-      document.getElementById('reason-text').textContent = `"${message}"`;
-      triggerConfettiBurst();
-
-      poppedCount++;
-      if (poppedCount >= 3) {
-        document.getElementById('balloon-next').style.display = 'inline-block';
-      }
-    }
-
-    /* Confetti system */
-    const canvas = document.getElementById('confetti-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height - canvas.height;
-        this.size = Math.random() * 8 + 4;
-        this.speedY = Math.random() * 3 + 2;
-        this.speedX = (Math.random() - 0.5) * 2;
-        this.color = ['#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#a855f7'][Math.floor(Math.random() * 5)];
-      }
-      update() {
-        this.y += this.speedY;
-        this.x += this.speedX;
-        if (this.y > canvas.height) {
-          this.y = -10;
-          this.x = Math.random() * canvas.width;
-        }
-      }
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.size, this.size);
-      }
-    }
-
-    for (let i = 0; i < 40; i++) {
-      particles.push(new Particle());
-    }
-
-    function triggerConfettiBurst() {
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 35; i++) {
         const p = new Particle();
         p.x = window.innerWidth / 2;
         p.y = window.innerHeight / 2;
