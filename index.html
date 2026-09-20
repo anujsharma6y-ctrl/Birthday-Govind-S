@@ -16,8 +16,9 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+      font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -47,12 +48,12 @@
       display: none;
       opacity: 0;
       transform: translateY(20px) scale(0.96);
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
       background: var(--card-bg);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 24px;
-      padding: 30px 22px;
+      padding: 28px 20px;
       text-align: center;
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
     }
@@ -79,43 +80,43 @@
       color: #94a3b8;
       font-size: 0.95rem;
       line-height: 1.5;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .btn {
       background: linear-gradient(135deg, #f59e0b, #d97706);
       color: #ffffff;
       border: none;
-      padding: 12px 28px;
+      padding: 12px 30px;
       font-size: 0.95rem;
       font-weight: 600;
       border-radius: 999px;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
       transition: transform 0.2s ease;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .btn:active {
       transform: scale(0.95);
     }
 
-    /* Floating Tap Icons */
+    /* Interactive Tap Targets */
     .tap-target {
-      font-size: 4rem;
+      font-size: 4.2rem;
       cursor: pointer;
       display: inline-block;
       margin: 25px auto;
-      transition: transform 0.25s ease;
+      transition: transform 0.2s ease;
       animation: float 2s infinite ease-in-out;
     }
 
-    .tap-target:hover {
-      transform: scale(1.2);
+    .tap-target:active {
+      transform: scale(0.85);
     }
 
     .tap-heart {
-      animation: pulse 1.2s infinite ease-in-out;
+      animation: pulse 1.1s infinite ease-in-out;
     }
 
     @keyframes float {
@@ -125,16 +126,16 @@
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
+      50% { transform: scale(1.22); }
     }
 
-    /* Polaroid Image Cards */
+    /* Polaroid Photo Frame */
     .polaroid {
       background: #ffffff;
       color: #1e293b;
       padding: 12px 12px 18px 12px;
       border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
       margin: 15px auto;
       max-width: 290px;
       animation: popIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -147,10 +148,11 @@
 
     .polaroid img {
       width: 100%;
-      height: 250px;
+      height: 260px;
       object-fit: cover;
       border-radius: 6px;
       display: block;
+      background: #e2e8f0;
     }
 
     .polaroid .caption {
@@ -163,80 +165,84 @@
 </head>
 <body>
 
-  <!-- Audio track -->
-  <audio id="bg-music" src="music.mp3" loop></audio>
+  <!-- Audio Element with both mp3 and m4a fallbacks -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+    <source src="Happy Birthday To You.m4a" type="audio/mp4">
+    <source src="music.m4a" type="audio/mp4">
+  </audio>
 
   <!-- Confetti Canvas -->
   <canvas id="confetti-canvas"></canvas>
 
   <div class="container">
 
-    <!-- Screen 0: Tap to Start Music -->
+    <!-- Screen 0: Start & Music Trigger -->
     <div class="slide active" id="slide-0">
       <div style="font-size: 3rem; margin-bottom: 10px;">✨</div>
       <p>A little birthday surprise for you...</p>
       <h1>Happy Birthday, Govind!</h1>
-      <p>Turn on audio & tap below 🎶</p>
+      <p>Turn up the volume & tap below 🎶</p>
       <button class="btn" onclick="startExperience()">Let's Celebrate! 🎉</button>
     </div>
 
     <!-- Screen 1: Pop the Balloon -->
     <div class="slide" id="slide-1">
       <h2>Pop the Balloon 🎈</h2>
-      <p>Tap the balloon to see what is inside!</p>
+      <p>Tap the balloon to see the surprise!</p>
       <div class="tap-target" onclick="popAndNext()">🎈</div>
     </div>
 
-    <!-- Screen 2: Photo 1 Appears -->
+    <!-- Screen 2: Photo 1 (Doctor) -->
     <div class="slide" id="slide-2">
       <h2>Dr. Govind 🩺</h2>
       <div class="polaroid">
-        <img src="images/photo1.jpg" alt="Govind Doctor" />
+        <img src="photo1.jpg" onerror="this.onerror=null; this.src='images/photo1.jpg';" alt="Govind Doctor" />
         <div class="caption">Dedicated, hardworking & inspiring! 🩺✨</div>
       </div>
       <button class="btn" onclick="nextSlide()">Continue ➡️</button>
     </div>
 
-    <!-- Screen 3: Heart Appears -->
+    <!-- Screen 3: Tap the Heart -->
     <div class="slide" id="slide-3">
       <h2>Tap the Heart ❤️</h2>
       <p>Tap the beating heart to unlock another memory!</p>
       <div class="tap-target tap-heart" onclick="popAndNext()">❤️</div>
     </div>
 
-    <!-- Screen 4: Photo 2 Appears -->
+    <!-- Screen 4: Photo 2 (Selfie) -->
     <div class="slide" id="slide-4">
       <h2>Partners in Crime 🤜🤛</h2>
       <div class="polaroid">
-        <img src="images/photo2.jpg" alt="Brothers Selfie" />
+        <img src="photo2.jpg" onerror="this.onerror=null; this.src='images/photo2.jpg';" alt="Brothers Selfie" />
         <div class="caption">Unbreakable bond & endless laughs 🌟</div>
       </div>
       <button class="btn" onclick="nextSlide()">Continue ➡️</button>
     </div>
 
-    <!-- Screen 5: Star / Magic Tap -->
+    <!-- Screen 5: Tap the Star -->
     <div class="slide" id="slide-5">
       <h2>Make a Wish ✨</h2>
-      <p>Tap the golden star!</p>
+      <p>Tap the shining star!</p>
       <div class="tap-target" onclick="popAndNext()">🌟</div>
     </div>
 
-    <!-- Screen 6: Photo 3 Appears -->
+    <!-- Screen 6: Photo 3 (Sunset) -->
     <div class="slide" id="slide-6">
       <h2>Chasing Sunsets 🌅</h2>
       <div class="polaroid">
-        <img src="images/photo3.jpg" alt="Brothers Sunset" />
-        <div class="caption">To all our journeys and golden memories 🌇</div>
+        <img src="photo3.jpg" onerror="this.onerror=null; this.src='images/photo3.jpg';" alt="Brothers Sunset" />
+        <div class="caption">To all the journeys and golden memories 🌇</div>
       </div>
       <button class="btn" onclick="nextSlide()">See Birthday Wish 🎂</button>
     </div>
 
-    <!-- Screen 7: Final Birthday Greeting Card -->
+    <!-- Screen 7: Grand Happy Birthday Greeting -->
     <div class="slide" id="slide-7">
       <div style="font-size: 3.5rem; margin-bottom: 10px;">🎂</div>
       <h1>HAPPY BIRTHDAY<br>GOVIND!</h1>
       <p style="color: #cbd5e1; font-size: 1.05rem; margin: 15px 0 25px;">
-        May this year bring you limitless happiness, good health, and success in everything you do. Keep shining bright! 🥂✨
+        May this year bring you limitless happiness, good health, and immense success in everything you do. Keep shining bright! 🥂✨
       </p>
       <button class="btn" onclick="triggerConfettiBurst()">Celebrate More 🎉</button>
     </div>
@@ -269,7 +275,7 @@
       }
     }
 
-    /* Confetti Particle System */
+    /* Lightweight Confetti Engine */
     const canvas = document.getElementById('confetti-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -330,4 +336,5 @@
     animate();
   </script>
 </body>
-</html>
+  </html>
+  
